@@ -99,5 +99,59 @@ const orderSchema = new mongoose.Schema({
             validator: (items) => items.length > 0,
             message: "Order must contain at least one item"
         }
+    },
+
+    shippingAddress: {
+        type: shippingAddressSchema,
+        required: true
+    },
+
+    subtotal: {
+        type: Number,
+        required: true,
+        min: 0
+    }, 
+
+    deliveryFee: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    totalAmount: {
+        type: Number,
+        required: true,
+        min: 0
+    }, 
+
+    status: {
+        type: String,
+        enum: ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"],
+        default: "pending", 
+        index: true
+    },
+
+    paymentStatus: {
+        type: String,
+        enum: ["pending", "paid", "failed", "refunded"],
+        default: "pending", 
+        index: true
+    }, 
+
+    paymentReference: {
+        type: String,
+        default: "",
+        unique: true,
+        sparse: true   
     }
+},
+{
+    timestamps: true
+});
+
+orderSchema.index({
+    buyer: 1,
+    createdAt: -1
 })
+
+module.exports = mongoose.model("Order", orderSchema)
