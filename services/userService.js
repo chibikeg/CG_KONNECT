@@ -16,7 +16,7 @@ const search = async (query, page = 1) => {
     const safePage = Math.max(Number.parseInt(page, 10) || 1, 1);
     const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 
-    return User.find({
+    return User.find({ 
         isActive: true,
         $or: [
             {name: {$regex: escapeQuery, $options: "i"}},
