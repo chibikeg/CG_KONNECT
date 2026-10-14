@@ -19,8 +19,8 @@ const search = async (query, page = 1) => {
     return User.find({ 
         isActive: true,
         $or: [
-            {name: {$regex: escapeQuery, $options: "i"}},
-            {email: {$regex: escapeQuery, $options: "i"}}
+            {name: {$regex: escapedQuery, $options: "i"}},
+            {email: {$regex: escapedQuery, $options: "i"}}
         ]
     })
         .select("name profilePicture bio")
