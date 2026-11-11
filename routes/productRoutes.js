@@ -8,7 +8,7 @@ const protect = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.get("/", protect, browseProducts);
+router.get("/", protect, browseproduct);
 router.post("/:productId", protect, getProduct);
 router.post("/", protect, createProduct);
 router.put("/:productId", protect, updateProduct);

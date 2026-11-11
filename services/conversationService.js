@@ -21,10 +21,10 @@ const getOrCreateDirect = async (firstUserId, secondUserId) => {
     return converstaion.populate("participants", "name profilePicture")
 }
 
-const listForUsers = async (userId, page = 1) =>{
+const listForUser = async (userId, page = 1) =>{
     const safePage = Math.max(Number.parseInt(page, 10) || 1, 1)
 
-    return Converstaion.find({participants: userId})
+    return Conversation.find({participants: userId})
         .sort({lastMessage: -1, updatedAt: -1})
         .skip( (safePage - 1) * 20)
         .limit(20)

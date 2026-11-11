@@ -4,10 +4,10 @@ const productService = require("../services/productService");
 const requireSeller = (req, res) => {
     if (req.user.role === "seller" || req.seller.role === "admin") return false;
 
-    res.status(403).json([
+    res.status(403).json({
         success: false,
         message: "Seller access is required"
-    ]);
+    });
 
     return true;
 }
@@ -68,7 +68,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     return res.status(200).json({ success: true, message: "Product deleted"});
 })
 
-models.exports = {
+module.exports = {
     createProduct,
     browseproduct,
     getProduct,

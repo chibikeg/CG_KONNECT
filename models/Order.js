@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { validate } = require("./User");
 
-const orderItemSChema = new mongoose.Schema({
+const orderItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",

@@ -1,7 +1,7 @@
 const asyncHandler = require("../helpers/asyncHandler");
 const commentService = require("../services/commentService");
 
-const listComments = asyncHanlder(async(req, res)=>{
+const listComments = asyncHandler(async(req, res)=>{
     const comments = await commentService.listForPost(
         req.params.postId,
         req.query.page

@@ -29,4 +29,4 @@ const getFollowers = asyncHandler(async (req, res) => {
     return res.status(200).json({ success: true, data: {following}});
 })
 
-models.exports = {followUser, unfollowUser, getFollowing, getFollowers}
+module.exports = {followUser, unfollowUser, getFollowing, getFollowers}
