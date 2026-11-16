@@ -6,6 +6,16 @@ const register = asyncHandler (async(req, res) => {
     res.status(201).json({success: true, data});
 });
 
+const verifyEmail = asyncHandler (async(req, res) => {
+    const data = await authService.verifyEmail(req.body);
+    res.status(200).json({success: true, data});
+});
+
+const resendVerificationCode = asyncHandler (async(req, res) => {
+    const data = await authService.resendVerificationCode(req.body);
+    res.status(200).json({success: true, data});
+});
+
 const login = asyncHandler (async(req, res) => {
     const data = await authService.login(req.body);
     res.status(200).json({success: true, data});
@@ -15,4 +25,10 @@ const getCurrentUser = asyncHandler (async(req, res) => {
     res.status(200).json({success: true, data: {user: authService.toPublicUser(req.user)}});
 });
 
-module.exports = {register, login, getCurrentUser}
+module.exports = {
+    register, 
+    verifyEmail,
+    resendVerificationCode,
+    login, 
+    getCurrentUser
+}

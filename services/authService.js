@@ -1,6 +1,7 @@
 const User = require("../models/User")
 const bcryptjs = require("bcryptjs")
 const generateToken = require("../helpers/generateToken")
+const otpService = require("./otpService");
 
 const toPublicUser = (user) =>({
     id: user._id,
@@ -35,6 +36,57 @@ const register = async ({name, email, password}) => {
 
 }
 
+const verifyEmail = async ({ email, code}) => {
+    const user = await User.findOne ({ email: email.toLowerCase()});
+
+    if(!user){
+        const error = new Error(" Invalid email or vsrification code");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    if(user.isVerified){
+        return { user: toPublicUser(user), token: generateToken(user._id)};
+    }
+
+    const isValid = await otpService.verifyCode(user._id, code);
+
+    if(!isValid){
+        const error = new Error(" Invalid email or vsrification code");
+        error.statusCode = 400;
+        throw error;
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    return {
+        user: toPublicUser(user),
+        token: generateToken(user._id)
+    };
+}
+
+const resendVerificationCode = async ( {email}) => {
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if(!user){
+        const error = new Error("Account not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if(user.isVerified){
+        const error = new Error("Email is already verified");
+        error.statusCode = 403;
+        throw error;
+    }
+
+    await otpService.sendVerificationCode(user);
+    return {
+        message: "Verification code sent to your email"
+    }
+}
+
 
 const login = async ({email, password}) => {
     const user = await User.findOne({email: email.toLowerCase()}).select("+password");
@@ -50,10 +102,23 @@ const login = async ({email, password}) => {
         throw error;
     }
 
+    if(!user.isVerified){
+        const error = new Error("Please verify your email before logging in");
+        error.statusCode = 403;
+        throw error;
+    }
+
+
     return {
         user: toPublicUser(user),
         token: generateToken(user._id)
     };
 }
 
-module.exports = {register, login, toPublicUser}
+module.exports = {
+    register, 
+    verifyEmail,
+    resendVerificationCode,
+    login, 
+    toPublicUser
+}
